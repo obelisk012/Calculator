@@ -13,6 +13,10 @@ def is_float(s):
 
 class Math:
     @staticmethod
+    def avg(nums: list[float]) -> float:
+        return sum(nums) / len(nums) if nums else 0.0
+
+    @staticmethod
     def add(a, b):
         return a + b
     
@@ -71,10 +75,7 @@ running = True
 while running:
     try:
         user_input = re.sub(" ", "", input("MaTh!!!!: ").strip().lower())
-        if user_input == "exit":
-            running = False
-            continue
-        elif user_input == "clear":
+        if user_input == "clear":
             os.system('cls' if os.name == 'nt' else 'clear')
             continue
 
