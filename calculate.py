@@ -70,6 +70,12 @@ class Math:
         for _ in range(1, b):
             result = Math.tetrate(a, result)
         return result
+    
+    @staticmethod
+    def sqrt(n):
+        if n < 0:
+            raise ValueError("Square root is not defined for negative numbers.")
+        return n ** 0.5
 
 running = True
 while running:
@@ -79,10 +85,13 @@ while running:
             os.system('cls' if os.name == 'nt' else 'clear')
             continue
 
-        # factorial
+        # factorial (e.g. 5!)
         if user_input.endswith("!"):
             try:
-                number = int(user_input[:-1])
+                inner = user_input[:-1]
+                if not is_float(inner):
+                    raise ValueError("Factorial requires a numeric whole number.")
+                number = float(inner)
                 if not number.is_integer():
                     raise ValueError("Factorial requires a whole number.")
                 result = Math.factorial(int(number))
@@ -91,7 +100,35 @@ while running:
                 print(e)
             continue
 
-        # allow decimals
+        # sqrt (support: sqrt(9), sqrt9, √9)
+        if user_input.startswith("sqrt") or user_input.startswith("√"):
+            try:
+                # remove the leading keyword or symbol
+                if user_input.startswith("√"):
+                    inner = user_input[1:]
+                else:
+                    inner = user_input[4:]
+
+                # strip surrounding parentheses if present
+                if inner.startswith("(") and inner.endswith(")"):
+                    inner = inner[1:-1]
+
+                if inner == "":
+                    raise ValueError("No number provided for sqrt.")
+
+                if not is_float(inner):
+                    raise ValueError("Invalid number provided for sqrt.")
+
+                number = float(inner)
+                result = Math.sqrt(number)
+                if isinstance(result, float) and result.is_integer():
+                    result = int(result)
+                print(f"Result: {result}")
+            except ValueError as e:
+                print(e)
+            continue
+
+    # allow decimals
         match = re.match(r"(-?\d+(?:\.\d+)?)(\^\^\^|\^\^|[+\-*/%^])(-?\d+(?:\.\d+)?)", user_input)
         if match:
             num1 = float(match.group(1))
@@ -130,6 +167,10 @@ while running:
                 print(f"Result: {result}")
             except ValueError as e:
                 print(e)
+
+        # if we reach here, input wasn't recognized
+        else:
+            print("Invalid response: could not parse input. Try examples like '2+2', 'sqrt(9)', '5!', or 'clear'.")
 
     except KeyboardInterrupt:
         running = False
